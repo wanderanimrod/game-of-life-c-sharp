@@ -1,0 +1,4 @@
+#! /bin/sh
+
+myDir="`dirname \"$0\"`"
+mono $myDir/nuget.exe "$@"
