@@ -1,13 +1,14 @@
 ﻿using Xunit;
 using gameOfLife;
 using System.Collections.Generic;
+using System;
 
 namespace Test
 {
 	public class CellTest
 	{
 		[Fact]
-		public void CellShouldBeDeadWhenCreatedWithoutArguments()
+		public void ShouldBeDeadWhenCreatedWithoutArguments()
 		{
 			var cell = new Cell ();
 
@@ -17,9 +18,9 @@ namespace Test
 		}
 
 		[Fact]
-		public void CellShouldBeAliveWhenCreatedAlive()
+		public void ShouldBeAliveWhenCreatedAlive()
 		{
-			var cell = new Cell (true);
+			var cell = new Cell (CellState.Alive);
 
 			var cellIsAlive = cell.IsAlive ();
 				
@@ -27,25 +28,58 @@ namespace Test
 		}
 
 		[Fact]
-		public void CellShouldBecomeAliveWhen2NeighboursAreAlive()
+		public void WhenAlive_ShouldBecomeDead_WhenMoreThan3NeighboursAreAlive()
 		{
-			var cell = new Cell ();
-			List<Cell> neighbours = new List<Cell>{ new Cell (true), new Cell (true)};
+			var cell = new Cell (CellState.Alive);
+			Neighbourhood neighbourhood = NeighbourhoodFactory.MakeNeighbourhood(4);
 
-			cell.Transition (neighbours);
+			cell.Transition (neighbourhood);
 
-			Assert.True (cell.IsAlive());
+			Assert.False (cell.IsAlive ());
 		}
 
 		[Fact]
-		public void CellShouldBecomeDeadWhen4NeighboursAreAlive()
+		public void WhenAlive_ShouldBecomeDead_WhenLessThan2NeighboursAreAlive()
 		{
-			var cell = new Cell (true);
-			List<Cell> neighbours = new List<Cell>{ new Cell (true), new Cell (true), new Cell(true), new Cell(true)};
+			var cell = new Cell (CellState.Alive);
+			Neighbourhood neighbourhood = NeighbourhoodFactory.MakeNeighbourhood(1);
 
-			cell.Transition (neighbours);
+			cell.Transition (neighbourhood);
 
 			Assert.False (cell.IsAlive ());
+		}
+
+		[Fact]
+		public void WhenDead_ShouldBecomeAlive_WhenExactly3NeighboursAreAlive()
+		{
+			var cell = new Cell ();
+			Neighbourhood neighbourhood = NeighbourhoodFactory.MakeNeighbourhood(3);
+
+			cell.Transition (neighbourhood);
+
+			Assert.True (cell.IsAlive());
+		}
+			
+		[Fact]
+		public void WhenDead_ShouldRemainDead_WhenAliveNeighboursAreLessThan3()
+		{
+			var cell = new Cell ();
+			Neighbourhood neighbourhood = NeighbourhoodFactory.MakeNeighbourhood(2);
+
+			cell.Transition (neighbourhood);
+
+			Assert.False (cell.IsAlive());
+		}
+
+		[Fact]
+		public void WhenDead_ShouldRemainDead_WhenAliveNeighboursAreMoreThan3()
+		{
+			var cell = new Cell ();
+			Neighbourhood neighbourhood = NeighbourhoodFactory.MakeNeighbourhood(4);
+
+			cell.Transition (neighbourhood);
+
+			Assert.False (cell.IsAlive());
 		}
 	}
 }

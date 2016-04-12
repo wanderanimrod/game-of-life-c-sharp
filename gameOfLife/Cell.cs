@@ -6,35 +6,41 @@ namespace gameOfLife
 {
 	public class Cell
 	{
-		private bool isAlive = false;
+		private CellState currentState = CellState.Dead;
 
-		public Cell() {
-		}
+		public Cell() {}
 
-		public Cell(bool initialState)
+		public Cell(CellState initialState)
 		{
-			this.isAlive = initialState;
+			this.currentState = initialState;
 		}
 
 		public bool IsAlive ()
 		{
-			return this.isAlive;
+			return this.currentState == CellState.Alive;
 		}
 
-		public void Transition(List<Cell> neighbours)
+		private bool IsDead()
 		{
-			this.isAlive = true;
-			var aliveNeighbours = this.CountAliveNeighbours (neighbours);
-			if (aliveNeighbours > 3) {
-				this.isAlive = false;
+			return !this.IsAlive ();	
+		}
+
+		public void Transition(Neighbourhood neighbourhood)
+		{
+			var aliveNeighbours = neighbourhood.AliveCellCount();
+			if (this.IsDead ()) {
+				if (aliveNeighbours == 3) {
+					this.currentState = CellState.Alive;
+				}	
+			} else {
+				if (aliveNeighbours == 2 || aliveNeighbours == 3) {
+					this.currentState = CellState.Alive;
+				} else {
+					this.currentState = CellState.Dead;
+				}
 			}
-		}
 
-		private int CountAliveNeighbours(List<Cell> neighbours)
-		{
-			return neighbours.Where (neighbour => neighbour.IsAlive()).Count ();
 		}
-
 	}
 }
 
