@@ -1,24 +1,44 @@
 ﻿using Xunit;
+using gameOfLife;
+using System.Linq;
 
 namespace Test
 {
 	public class CellTest
 	{
 		[Fact]
-		public void PassingTest()
+		public void cell_should_be_dead_when_instantiated_with_no_args()
 		{
-			Assert.Equal(4, Add(2, 2));
+			var cell = new Cell ();
+			Assert.False(cell.IsAlive());
 		}
 
 		[Fact]
-		public void FailingTest()
+		public void CellShouldBeAliveWhenInstantiatedAlive()
 		{
-			Assert.Equal(5, Add(2, 3));
+			var cell = new Cell (true);
+			Assert.True(cell.IsAlive());
 		}
 
-		int Add(int x, int y)
+		[Fact]
+		public void ShouldCountNumberOfTrueThings() {
+			bool[] cells = { false, false, false, true, true };
+			Assert.Equal (2, countTrues (cells));
+		}
+
+		private int countTrues(bool[] bools) {
+			return bools.Where (b => b).Count();
+		}
+
+		private int counter(bool[] bools)
 		{
-			return x + y;
+			int countTrue = 0;
+			foreach (bool b in bools) {
+				if (b) {
+					countTrue++;
+				}
+			}
+			return countTrue;
 		}
 	}
 }
