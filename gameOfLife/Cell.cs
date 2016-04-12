@@ -1,29 +1,40 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace gameOfLife
 {
 	public class Cell
 	{
-		private bool isAlive;
+		private bool isAlive = false;
 
-		public Cell (bool isAlive)
+		public Cell() {
+		}
+
+		public Cell(bool initialState)
 		{
-			this.isAlive = isAlive;
+			this.isAlive = initialState;
 		}
 
-		public Cell () 
-		{
-			
-		}
-
-		public void Translate() {
-			
-		}
-
-		public bool IsAlive()
+		public bool IsAlive ()
 		{
 			return this.isAlive;
 		}
+
+		public void Transition(List<Cell> neighbours)
+		{
+			this.isAlive = true;
+			var aliveNeighbours = this.CountAliveNeighbours (neighbours);
+			if (aliveNeighbours > 3) {
+				this.isAlive = false;
+			}
+		}
+
+		private int CountAliveNeighbours(List<Cell> neighbours)
+		{
+			return neighbours.Where (neighbour => neighbour.IsAlive()).Count ();
+		}
+
 	}
 }
 

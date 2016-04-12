@@ -1,44 +1,51 @@
 ﻿using Xunit;
 using gameOfLife;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Test
 {
 	public class CellTest
 	{
 		[Fact]
-		public void cell_should_be_dead_when_instantiated_with_no_args()
+		public void CellShouldBeDeadWhenCreatedWithoutArguments()
 		{
 			var cell = new Cell ();
-			Assert.False(cell.IsAlive());
+
+			var cellIsAlive = cell.IsAlive ();
+
+			Assert.False (cellIsAlive);
 		}
 
 		[Fact]
-		public void CellShouldBeAliveWhenInstantiatedAlive()
+		public void CellShouldBeAliveWhenCreatedAlive()
 		{
 			var cell = new Cell (true);
-			Assert.True(cell.IsAlive());
+
+			var cellIsAlive = cell.IsAlive ();
+				
+			Assert.True (cellIsAlive);
 		}
 
 		[Fact]
-		public void ShouldCountNumberOfTrueThings() {
-			bool[] cells = { false, false, false, true, true };
-			Assert.Equal (2, countTrues (cells));
-		}
-
-		private int countTrues(bool[] bools) {
-			return bools.Where (b => b).Count();
-		}
-
-		private int counter(bool[] bools)
+		public void CellShouldBecomeAliveWhen2NeighboursAreAlive()
 		{
-			int countTrue = 0;
-			foreach (bool b in bools) {
-				if (b) {
-					countTrue++;
-				}
-			}
-			return countTrue;
+			var cell = new Cell ();
+			List<Cell> neighbours = new List<Cell>{ new Cell (true), new Cell (true)};
+
+			cell.Transition (neighbours);
+
+			Assert.True (cell.IsAlive());
+		}
+
+		[Fact]
+		public void CellShouldBecomeDeadWhen4NeighboursAreAlive()
+		{
+			var cell = new Cell (true);
+			List<Cell> neighbours = new List<Cell>{ new Cell (true), new Cell (true), new Cell(true), new Cell(true)};
+
+			cell.Transition (neighbours);
+
+			Assert.False (cell.IsAlive ());
 		}
 	}
 }
