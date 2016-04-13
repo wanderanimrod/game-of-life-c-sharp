@@ -28,18 +28,11 @@ namespace gameOfLife
 		public void Transition(Neighbourhood neighbourhood)
 		{
 			var aliveNeighbours = neighbourhood.AliveCellCount();
-			if (this.IsDead ()) {
-				if (aliveNeighbours == 3) {
-					this.currentState = CellState.Alive;
-				}	
-			} else {
-				if (aliveNeighbours == 2 || aliveNeighbours == 3) {
-					this.currentState = CellState.Alive;
-				} else {
-					this.currentState = CellState.Dead;
-				}
+			if (this.IsDead () && aliveNeighbours == 3) {
+				this.currentState = CellState.Alive;
+			} else if (aliveNeighbours < 2 || aliveNeighbours > 3) {
+				this.currentState = CellState.Dead;
 			}
-
 		}
 	}
 }
